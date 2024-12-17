@@ -13,9 +13,15 @@ provider:
   runtime: nodejs20.x
 
 functions:
-  hello:
-    handler: src/handler.hello
+  SwapiGetSpeciesFunction:
+    handler: src/features/swapi/handler.getSpecies
     events:
       - httpApi:
-          path: /
+          path: /swapi/species
+          method: get
+  SwapiGetSpecieByIdFunction:
+    handler: src/features/swapi/handler.getSpecieById
+    events:
+      - httpApi:
+          path: /swapi/species/{specieId}
           method: get
