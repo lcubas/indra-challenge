@@ -1,7 +1,9 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { UserService } from './services/UserService';
+import middy from '@middy/core';
+import jsonBodyParser from '@middy/http-json-body-parser';
 
-export const getUsers = async () => {
+const getUsers = async () => {
   const users = await UserService.getUsers();
 
   return {
@@ -10,7 +12,7 @@ export const getUsers = async () => {
   };
 }
 
-export const getUserById = async (event: APIGatewayProxyEvent) => {
+const getUserById = async (event: APIGatewayProxyEvent) => {
   const { userId } = event.pathParameters || {};
 
   if (!userId) {
@@ -26,7 +28,7 @@ export const getUserById = async (event: APIGatewayProxyEvent) => {
   };
 }
 
-export const createUser = async (event: APIGatewayProxyEvent) => {
+const createUser = async (event: APIGatewayProxyEvent) => {
   const userData = JSON.parse(event.body || '');
 
   if (!userData) {
@@ -43,3 +45,9 @@ export const createUser = async (event: APIGatewayProxyEvent) => {
     body: JSON.stringify({ data: createdUser }),
   };
 }
+
+export const getUsersHandler = middy(getUsers);
+export const getUserByIdHandler = middy(getUserById);
+export const createUserHandler = middy()
+  .use(jsonBodyParser())
+  .handler(createUser);

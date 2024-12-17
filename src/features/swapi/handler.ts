@@ -1,6 +1,7 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { SwapiApiService } from './services/SwapiApiService';
 import { speciesTransformer } from './transformers/species.transformer';
+import middy from '@middy/core';
 
 export const getSpecies = async () => {
   const species = await SwapiApiService.getSpecies();
@@ -32,3 +33,6 @@ export const getSpecieById = async (event: APIGatewayProxyEvent) => {
     }),
   };
 };
+
+export const getUsersHandler = middy(getSpecies);
+export const getUserByIdHandler = middy(getSpecieById);

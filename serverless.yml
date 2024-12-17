@@ -61,19 +61,19 @@ functions:
           path: /swapi/species/{specieId}
           method: get
   GetUsersFunction:
-    handler: src/features/user/handler.getUsers
+    handler: src/features/user/handler.getUsersHandler
     events:
       - httpApi:
           path: /users
           method: get
   GetUserByIdFunction:
-    handler: src/features/user/handler.getUserById
+    handler: src/features/user/handler.getUserByIdHandler
     events:
       - httpApi:
           path: /users/{userId}
           method: get
   CreateUserFunction:
-    handler: src/features/user/handler.createUser
+    handler: src/features/user/handler.createUserHandler
     events:
       - httpApi:
           path: /users
