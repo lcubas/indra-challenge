@@ -8,20 +8,73 @@ service: indra-challenge
 plugins:
   - serverless-offline
 
+stages:
+  default:
+    params:
+      tableName: "users-table-${sls:stage}"
+
 provider:
   name: aws
   runtime: nodejs20.x
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            - Fn::GetAtt: [UsersTable, Arn]
+  environment:
+    ENV: ${sls:stage}
+    USERS_TABLE: ${param:tableName}
+
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${param:tableName}
 
 functions:
-  SwapiGetSpeciesFunction:
+  GetSpeciesFromSwapiFunction:
     handler: src/features/swapi/handler.getSpecies
     events:
       - httpApi:
           path: /swapi/species
           method: get
-  SwapiGetSpecieByIdFunction:
+  GetSpecieByIdFromSwapiFunction:
     handler: src/features/swapi/handler.getSpecieById
     events:
       - httpApi:
           path: /swapi/species/{specieId}
           method: get
+  GetUsersFunction:
+    handler: src/features/user/handler.getUsersHandler
+    events:
+      - httpApi:
+          path: /users
+          method: get
+  GetUserByIdFunction:
+    handler: src/features/user/handler.getUserByIdHandler
+    events:
+      - httpApi:
+          path: /users/{userId}
+          method: get
+  CreateUserFunction:
+    handler: src/features/user/handler.createUserHandler
+    events:
+      - httpApi:
+          path: /users
+          method: post
