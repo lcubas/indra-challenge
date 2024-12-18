@@ -2,19 +2,19 @@ import type {
   GetCommandInput,
   PutCommandInput,
   ScanCommandInput,
-} from "@aws-sdk/lib-dynamodb";
+} from '@aws-sdk/lib-dynamodb';
 
-export type BaseDynamoDbParams = {
+export type BaseDynamoDBParams = {
   TableName: string;
 };
 
-export type DefaultDynamoDbItem = Record<string, any>;
+export type DefaultDynamoDBItem = Record<string, any>;
 
-export type DynamoDbScanParams = ScanCommandInput & BaseDynamoDbParams;
+export type DynamoDBScanParams = ScanCommandInput & BaseDynamoDBParams;
 
-export type DynamoDbGetParams = GetCommandInput & BaseDynamoDbParams;
+export type DynamoDBGetParams = GetCommandInput & BaseDynamoDBParams;
 
-export type DynamoDbPutParams<T> = PutCommandInput &
-  BaseDynamoDbParams & {
+export type DynamoDBPutParams<T> = PutCommandInput &
+  BaseDynamoDBParams & {
     Item: T;
   };

@@ -1,4 +1,4 @@
-import DynamoDb from '../../../services/dynamo-db/DynamoDb';
+import DynamoDB from '../../../services/dynamo-db/DynamoDB';
 import { User } from '../entities/User';
 import { USERS_TABLE } from '../constants';
 
@@ -10,7 +10,7 @@ export class UserService {
       TableName: UserService.tableName,
     };
 
-    return await DynamoDb.scan<User>(params) as User[];
+    return await DynamoDB.scan<User>(params) as User[];
   }
 
   static async getUserById(userId: string): Promise<User> {
@@ -19,7 +19,7 @@ export class UserService {
       Key: { userId },
     };
 
-    return await DynamoDb.get(params) as User;
+    return await DynamoDB.get(params) as User;
   }
 
   static async createUser(user: any): Promise<void> {
@@ -28,6 +28,6 @@ export class UserService {
       Item: user,
     };
 
-    await DynamoDb.put(params);
+    await DynamoDB.put(params);
   }
 }

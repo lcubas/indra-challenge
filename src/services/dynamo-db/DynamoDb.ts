@@ -1,17 +1,17 @@
 import { GetCommand, PutCommand, ScanCommand } from '@aws-sdk/lib-dynamodb';
-import DynamoDbFactory from './DynamoDbFactory';
+import DynamoDBFactory from './DynamoDBFactory';
 import {
-  DefaultDynamoDbItem,
-  DynamoDbGetParams,
-  DynamoDbPutParams,
-  DynamoDbScanParams,
+  DefaultDynamoDBItem,
+  DynamoDBGetParams,
+  DynamoDBPutParams,
+  DynamoDBScanParams,
 } from './types';
 
-export default class DynamoDb {
+export default class DynamoDB {
   private static readonly dynamoDbclient =
-    DynamoDbFactory.create().getDynamoDbClient();
+    DynamoDBFactory.create().getDynamoDBClient();
 
-  static async scan<T = DefaultDynamoDbItem>(params: DynamoDbScanParams) {
+  static async scan<T = DefaultDynamoDBItem>(params: DynamoDBScanParams) {
     try {
       const command = new ScanCommand(params);
       const { Items } = await this.dynamoDbclient.send(command);
@@ -21,7 +21,7 @@ export default class DynamoDb {
     }
   }
 
-  static async get<T = DefaultDynamoDbItem>(params: DynamoDbGetParams) {
+  static async get<T = DefaultDynamoDBItem>(params: DynamoDBGetParams) {
     try {
       const command = new GetCommand(params);
       const { Item } = await this.dynamoDbclient.send(command);
@@ -31,7 +31,7 @@ export default class DynamoDb {
     }
   }
 
-  static async put<T = DefaultDynamoDbItem>(params: DynamoDbPutParams<T>) {
+  static async put<T = DefaultDynamoDBItem>(params: DynamoDBPutParams<T>) {
     try {
       const command = new PutCommand(params);
       await this.dynamoDbclient.send(command);
