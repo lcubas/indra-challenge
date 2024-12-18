@@ -1,7 +1,9 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
-import { UserService } from './services/UserService';
 import middy from '@middy/core';
 import jsonBodyParser from '@middy/http-json-body-parser';
+import { UserService } from './services/UserService';
+import { createUserValidation } from './validations/createUserValidation';
+import { requestValidatorMiddleware } from '../../middlewares/requestValidatorMiddleware';
 
 const getUsers = async () => {
   const users = await UserService.getUsers();
@@ -10,7 +12,7 @@ const getUsers = async () => {
     statusCode: 200,
     body: JSON.stringify({ data: users }),
   };
-}
+};
 
 const getUserById = async (event: APIGatewayProxyEvent) => {
   const { userId } = event.pathParameters || {};
@@ -26,7 +28,7 @@ const getUserById = async (event: APIGatewayProxyEvent) => {
     statusCode: 200,
     body: JSON.stringify({ data: null }),
   };
-}
+};
 
 const createUser = async (event: APIGatewayProxyEvent) => {
   const userData = JSON.parse(event.body || '');
@@ -44,10 +46,13 @@ const createUser = async (event: APIGatewayProxyEvent) => {
     statusCode: 200,
     body: JSON.stringify({ data: createdUser }),
   };
-}
+};
 
 export const getUsersHandler = middy(getUsers);
+
 export const getUserByIdHandler = middy(getUserById);
+
 export const createUserHandler = middy()
   .use(jsonBodyParser())
+  .use(requestValidatorMiddleware(createUserValidation))
   .handler(createUser);

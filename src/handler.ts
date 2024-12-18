@@ -6,7 +6,7 @@ export const hello = async (event: APIGatewayEvent, context: Context) => {
   return {
     statusCode: 200,
     body: JSON.stringify({
-      message: "Hello world!",
+      message: 'Hello world!',
     }),
   };
 };

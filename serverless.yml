@@ -6,7 +6,18 @@ app: indra-challenge
 service: indra-challenge
 
 plugins:
+  - serverless-dynamodb
   - serverless-offline
+
+custom:
+  serverless-dynamodb:
+    stages:
+      - dev
+    start:
+      port: 4566
+      inMemory: true
+      migrate: true
+      # dbPath: .dynamodb
 
 stages:
   default:
